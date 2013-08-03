@@ -19,30 +19,6 @@
 
     <script src='//api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.js'></script>
     <script src="lib/leaflet-gpx/gpx.js"></script>
-    <script type="text/javascript">
-        var map = L.mapbox.map('map', 'liedman.map-mmgw7jk5');
-        var gpx;
-        var parser = document.createElement('a');
-
-        function _i(i) { return document.getElementById(i); }
-
-        parser.href = document.URL
-        gpx = 'data/tracks/' + parser.hash.substr(1) + '.gpx';
-
-        new L.GPX(gpx, {
-            async: true,
-            marker_options: {
-                startIconUrl: 'lib/leaflet-gpx/pin-icon-start.png',
-                endIconUrl: 'lib/leaflet-gpx/pin-icon-end.png',
-                shadowUrl: 'lib/leaflet-gpx/pin-shadow.png'
-            }
-        }).on('loaded', function(e) {
-            var gpx = e.target;
-            map.fitBounds(gpx.getBounds());
-            _i('dist').textContent = (gpx.get_distance() / 1000).toFixed(2)
-            _i('time').textContent = gpx.get_duration_string(gpx.get_total_time(), true)
-            _i('pace').textContent = gpx.get_duration_string(gpx.get_total_time() / (gpx.get_distance() / 1000), true)
-        }).addTo(map);
-    </script>
+    <script src="all.js"></script>
 </body>
 </html>

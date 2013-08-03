@@ -1,0 +1,9 @@
+{
+    "name": "gps-log-viewer",
+    "description": "Minimalistic web app to show GPS tracks",
+    "author": "Per Liedman <per@liedman.net>",
+    "dependencies": {
+        "backbone": "~1.0.0",
+        "jquery-untouched": "~1.10.2"
+    }
+}
