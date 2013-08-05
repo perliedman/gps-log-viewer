@@ -15,7 +15,7 @@ module.exports = {
         render: function() {
             var map = this.map;
 
-            new L.GPX(this.gpxUrl, {
+            this.layer = new L.GPX(this.gpxUrl, {
                 async: true,
                 marker_options: {
                     startIconUrl: 'lib/leaflet-gpx/pin-icon-start.png',
@@ -31,6 +31,14 @@ module.exports = {
             }).addTo(map);
 
             return this;
+        },
+
+        remove: function() {
+            if (this.layer) {
+                this.map.removeLayer(this.layer);
+            }
+
+            Backbone.View.prototype.remove.apply(this, arguments);
         }
     })
 }

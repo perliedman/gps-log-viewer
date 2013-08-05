@@ -5,6 +5,7 @@ var Backbone = require('backbone'),
 module.exports = Backbone.Router.extend({
     initialize: function(options) {
         this._map = options.map;
+        this.currentTrack = null;
     },
 
     routes: {
@@ -15,10 +16,15 @@ module.exports = Backbone.Router.extend({
         var model = new Models.Track({
                 id: year + '-' + month + '-' + date + '-' + name
             }),
-            map = this._map;
+            map = this._map,
+            _this = this;
+        if (this.currentTrack) {
+            this.currentTrack.remove();
+        }
+
         model.fetch({
             success: function() {
-                new Views.Track({model: model, map: map})
+                _this.currentTrack = new Views.Track({model: model, map: map})
                     .render();
             }
         });
