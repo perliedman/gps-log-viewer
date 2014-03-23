@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.topografix.com/GPX/1/0" version="1.0" xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd" creator="gpx.py -- https://github.com/tkrajina/gpxpy">
+<trk>
+<name>1</name>
+<desc/>
+<number>52.0</number>
+<trkseg>
+<trkpt lat="55.820346661" lon="14.074636912">
+<ele>48.68396</ele>
+<time>2008-07-15T13:52:01Z</time></trkpt>
+<trkpt lat="55.820346829" lon="14.074636493">
+<ele>47.241821</ele>
+<time>2008-07-15T13:52:02Z</time></trkpt></trkseg></trk></gpx>

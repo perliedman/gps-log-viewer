@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.topografix.com/GPX/1/0" version="1.0" xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd" creator="gpx.py -- https://github.com/tkrajina/gpxpy">
+<trk>
+<name>66</name>
+<desc/>
+<number>24.0</number>
+<trkseg>
+<trkpt lat="57.731981585" lon="11.942208074">
+<ele>8.789185</ele>
+<time>2013-06-06T14:26:03Z</time></trkpt>
+<trkpt lat="57.731925929" lon="11.942236153">
+<ele>8.789185</ele>
+<time>2013-06-06T14:26:04Z</time></trkpt>
+<trkpt lat="57.731937831" lon="11.942240596">
+<ele>8.789185</ele>
+<time>2013-06-06T14:26:05Z</time></trkpt>
+<trkpt lat="57.731941016" lon="11.942241602">
+<ele>8.308594</ele>
+<time>2013-06-06T14:26:08Z</time></trkpt>
+<trkpt lat="57.731941435" lon="11.942240596">
+<ele>9.269897</ele>
+<time>2013-06-06T14:26:10Z</time></trkpt>
+<trkpt lat="57.731941687" lon="11.942240763">
+<ele>10.711792</ele>
+<time>2013-06-06T14:26:16Z</time></trkpt>
+<trkpt lat="57.731942693" lon="11.942240847">
+<ele>10.711792</ele>
+<time>2013-06-06T14:26:19Z</time></trkpt>
+<trkpt lat="57.731942357" lon="11.942241183">
+<ele>11.673218</ele>
+<time>2013-06-06T14:26:21Z</time></trkpt></trkseg></trk></gpx>

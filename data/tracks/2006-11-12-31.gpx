@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.topografix.com/GPX/1/0" version="1.0" xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd" creator="gpx.py -- https://github.com/tkrajina/gpxpy">
+<trk>
+<name>31</name>
+<desc/>
+<number>24.0</number>
+<trkseg>
+<trkpt lat="57.695362307" lon="11.958192196">
+<ele>23.208984</ele>
+<time>2006-11-12T15:33:39Z</time></trkpt>
+<trkpt lat="57.695362223" lon="11.958194962">
+<ele>22.247559</ele>
+<time>2006-11-12T15:33:40Z</time></trkpt>
+<trkpt lat="57.695361469" lon="11.958197979">
+<ele>20.324951</ele>
+<time>2006-11-12T15:33:41Z</time></trkpt></trkseg></trk></gpx>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.topografix.com/GPX/1/0" version="1.0" xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd" creator="gpx.py -- https://github.com/tkrajina/gpxpy">
+<trk>
+<name>36</name>
+<desc/>
+<number>41.0</number>
+<trkseg>
+<trkpt lat="57.688817633" lon="11.950455029">
+<ele>3.982666</ele>
+<time>2006-12-10T16:20:26Z</time></trkpt>
+<trkpt lat="57.688739514" lon="11.950454526">
+<ele>3.02124</ele>
+<time>2006-12-10T16:20:29Z</time></trkpt>
+<trkpt lat="57.688492499" lon="11.95032184">
+<ele>5.905273</ele>
+<time>2006-12-10T16:20:35Z</time></trkpt>
+<trkpt lat="57.688458133" lon="11.950339274">
+<ele>4.943848</ele>
+<time>2006-12-10T16:20:37Z</time></trkpt>
+<trkpt lat="57.688233163" lon="11.950612105">
+<ele>9.269897</ele>
+<time>2006-12-10T16:20:44Z</time></trkpt>
+<trkpt lat="57.687717173" lon="11.951032793">
+<ele>12.153809</ele>
+<time>2006-12-10T16:20:59Z</time></trkpt>
+<trkpt lat="57.687199591" lon="11.951330854">
+<ele>12.634399</ele>
+<time>2006-12-10T16:21:15Z</time></trkpt>
+<trkpt lat="57.686785189" lon="11.951362034">
+<ele>10.711792</ele>
+<time>2006-12-10T16:21:29Z</time></trkpt>
+<trkpt lat="57.685567383" lon="11.951171095">
+<ele>8.308594</ele>
+<time>2006-12-10T16:22:12Z</time></trkpt>
+<trkpt lat="57.685108641" lon="11.950909495">
+<ele>11.673218</ele>
+<time>2006-12-10T16:22:26Z</time></trkpt>
+<trkpt lat="57.682384858" lon="11.947683971">
+<ele>12.634399</ele>
+<time>2006-12-10T16:24:09Z</time></trkpt>
+<trkpt lat="57.682134071" lon="11.947471742">
+<ele>14.557007</ele>
+<time>2006-12-10T16:24:18Z</time></trkpt>
+<trkpt lat="57.68206425" lon="11.94722414">
+<ele>13.595825</ele>
+<time>2006-12-10T16:24:22Z</time></trkpt>
+<trkpt lat="57.682027705" lon="11.947132275">
+<ele>13.115112</ele>
+<time>2006-12-10T16:24:24Z</time></trkpt>
+<trkpt lat="57.681907592" lon="11.946890876">
+<ele>13.595825</ele>
+<time>2006-12-10T16:24:29Z</time></trkpt>
+<trkpt lat="57.692167209" lon="11.954820408">
+<ele>-6.111206</ele>
+<time>2006-12-10T16:32:32Z</time></trkpt></trkseg></trk></gpx>
