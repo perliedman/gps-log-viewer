@@ -46,6 +46,11 @@ body {
     color: inherit;
     text-decoration: none;
 }
+
+.selected {
+    background: #efe;
+}
+
 .track-list .summary {
     float: right;
     font-size: 75%;

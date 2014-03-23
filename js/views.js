@@ -55,11 +55,13 @@ module.exports = {
         render: function() {
             var model = {
                 tracks: this.model.get('tracks').models.
-                    map(function(t, i) {
+                    map(function(t) {
+                        var id = (t.attributes.time.length > 0 ? moment(t.attributes.time[0]).format('YYYY-MM-DD') + '-' +
+                                                                                    t.attributes.name : '');
                         return _.extend({
+                            id: id,
                             date: t.attributes.time[0],
-                            url: '#' + (t.attributes.time.length > 0 ? moment(t.attributes.time[0]).format('YYYY-MM-DD') + '-' +
-                                                                                    t.attributes.name : '')
+                            url: '#' + id
                         }, t.attributes);
                     }).
                     sort(function(a, b) { return b.date - a.date; })
@@ -87,9 +89,6 @@ module.exports = {
             }).on('loaded', function(e) {
                 var gpx = e.target;
                 map.fitBounds(gpx.getBounds());
-                _i('dist').textContent = (gpx.get_distance() / 1000).toFixed(2)
-                _i('time').textContent = gpx.get_duration_string(gpx.get_total_time(), true)
-                _i('pace').textContent = gpx.get_duration_string(gpx.get_total_time() / (gpx.get_distance() / 1000), true)
             }).addTo(map);
 
             return this;
