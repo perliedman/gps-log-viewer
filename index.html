@@ -5,16 +5,21 @@
     <!--[if lte IE 8]>
       <link href='//api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.ie.css' rel='stylesheet' />
     <![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div id="map"></div>
-    <div id="info" class="leaflet-bar">
-        <ul>
-            <li>Distance: <span id="dist"></span> km</li>
-            <li>Time: <span id="time"></span></li>
-            <li>Pace: <span id="pace"></span>/km</li>
-        </ul>
+    <div id="map" class="map"></div>
+    <div class="sidebar">
+        <div id="info">
+            <ul>
+                <li>Distance: <span id="dist"></span> km</li>
+                <li>Time: <span id="time"></span></li>
+                <li>Pace: <span id="pace"></span>/km</li>
+            </ul>
+        </div>
+        <div id="index">
+        </div>
     </div>
 
     <script src='//api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.js'></script>
