@@ -1,0 +1,18 @@
+{{#if header }}<h2>{{ header }}</h2>{{/if}}
+
+<ul class="track-list">
+    {{#each tracks}}
+    <li data-track="{{ this.id }}">
+        <a name="{{ this.id }}"/>
+        <a href="{{ this.url }}">
+            <div class="summary">{{ distance this.distance 2 }} km</div>
+            <div class="summary">{{ time this.time }}</div>
+            <div class="summary">{{ pace this }}</div>
+            <time datetime="{{ this.date }}">{{ date this.date }}</time><br/>
+            {{ this.location }}
+            <div class="row"></div>
+        </a>
+        <div class="details"></div>
+    </li>
+    {{/each}}
+</ul>

@@ -1,18 +1,13 @@
-<ul class="track-list">
-    {{#each tracks}}
-    <a name="{{ this.id }}">
-        <li data-track="{{ this.id }}">
-            <a href="{{ this.url }}">
-                <div class="summary">{{ distance this.distance 2 }} km</div>
-                <div class="summary">{{ time this.time }}</div>
-                <div class="summary">{{ pace this }}</div>
-                <time datetime="{{ this.date }}">{{ date this.date }}</time>
-                {{ this.name }}<br/>
-                {{ this.location }}
-                <div class="row"></div>
-            </a>
-            <div class="details"></div>
-        </li>
-    </a>
-    {{/each}}
-</ul>
+<h2>Stats</h2>
+<p>
+    <strong>{{distance latestMonthStats.distance 1}} km</strong> in
+    <strong>{{time latestMonthStats.time }}</strong> during {{ latestMonth }}
+</p>
+<p>
+    <strong>{{distance latestYearStats.distance}} km</strong> in
+    <strong>{{time latestYearStats.time }}</strong> during {{ latestYear }}
+</p>
+<h2>Latest Tracks</h2>
+<div class="latest-tracks">
+</div>
+<a href="#all-tracks">All Tracks</a>

@@ -1,5 +1,4 @@
-var index = require('../templates/index.hbs');
-
 module.exports = {
-    index: index
+    index: require('../templates/index.hbs'),
+    trackList: require('../templates/track-list.hbs')
 };

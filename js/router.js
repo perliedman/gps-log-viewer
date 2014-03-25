@@ -11,6 +11,7 @@ module.exports = Backbone.Router.extend({
 
     routes: {
         '': 'index',
+        'all-tracks': 'allTracks',
         ':year-:month-:date-:name': 'track'
     },
 
@@ -18,6 +19,18 @@ module.exports = Backbone.Router.extend({
         new Models.TrackIndex().fetch({success: function(model) {
             var trackAgg = new Models.TrackAggregation({tracks: model});
             new Views.Index({model: trackAgg}).render();
+        }});
+    },
+
+    allTracks: function() {
+        new Models.TrackIndex().fetch({success: function(model) {
+            var $index = $('#index'),
+                subview;
+            model.header = 'All Tracks';
+            subview = new Views.TrackList({model: model}).render();
+
+            $index.html('');
+            $index.append(subview.el);
         }});
     },
 
