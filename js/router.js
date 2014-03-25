@@ -11,15 +11,26 @@ module.exports = Backbone.Router.extend({
 
     routes: {
         '': 'index',
+        'all-tracks': 'allTracks',
         ':year-:month-:date-:name': 'track'
     },
 
     index: function() {
         new Models.TrackIndex().fetch({success: function(model) {
             var trackAgg = new Models.TrackAggregation({tracks: model});
-            $('#info').hide();
-            $('#index').show();
             new Views.Index({model: trackAgg}).render();
+        }});
+    },
+
+    allTracks: function() {
+        new Models.TrackIndex().fetch({success: function(model) {
+            var $index = $('#index'),
+                subview;
+            model.header = 'All Tracks';
+            subview = new Views.TrackList({model: model}).render();
+
+            $index.html('');
+            $index.append(subview.el);
         }});
     },
 
@@ -33,10 +44,12 @@ module.exports = Backbone.Router.extend({
             this.currentTrack.remove();
         }
 
+        $('#index .expanded').removeClass('expanded');
+        $('#index .selected').removeClass('selected');
         model.fetch({
             success: function() {
-                $('#index').hide();
-                $('#info').show();
+                $('#index li[data-track="' + model.id + '"]').addClass('selected');
+                $('#index li[data-track="' + model.id + '"] .details').addClass('expanded');
                 _this.currentTrack = new Views.Track({model: model, map: map})
                     .render();
             }
