@@ -2,12 +2,13 @@
 var Backbone = require('backbone'),
     Router = require('./router'),
     Models = require('./models'),
+    Views = require('./views'),
     map = L.mapbox.map('map', 'liedman.hj92n687');
 
 new Router({map: map});
 Backbone.history.start();
 
-},{"./models":2,"./router":3,"backbone":6}],2:[function(require,module,exports){
+},{"./models":2,"./router":3,"./views":5,"backbone":6}],2:[function(require,module,exports){
 var Backbone = require('backbone'),
     trackModel = Backbone.Model.extend({
         defaults: {
@@ -16,18 +17,22 @@ var Backbone = require('backbone'),
             time: []
         },
         url: function() {
-            return "data/tracks/" + this.id + ".json";
+            return 'data/tracks/' + this.id + '.json';
         },
         parse: function(response) {
             if (response.time) {
                 response.time = response.time.map(function(unixTs) { return new Date(unixTs * 1000); });
             }
             return response;
+        },
+        hasTime: function() {
+            var t = this.attributes.time;
+            return t && t.length >= 2;
         }
     }),
     indexModel = Backbone.Collection.extend({
         url: function() {
-            return "data/tracks/index.json"
+            return 'data/tracks/index.json';
         },
         model: trackModel
     }),
@@ -48,6 +53,16 @@ var Backbone = require('backbone'),
         initialize: function() {
             this._aggregate();
         },
+        getYears: function() {
+            var years = this.get('years');
+            return Object.keys(years).
+                filter(function(k) { return parseInt(k, 10) > 0;});
+        },
+        getMonths: function(year) {
+            var months = this.get('years')[year];
+            return Object.keys(months).
+                filter(function(k) { return parseInt(k, 10) > 0;});
+        },
         _aggregate: function() {
             var yearModels = this.get('tracks').reduce(function(years, t) {
                 var trackTime = t.get('time');
@@ -55,16 +70,16 @@ var Backbone = require('backbone'),
                     return years;
                 }
 
-                var y = trackTime[0].getYear(),
+                var y = trackTime[0].getFullYear(),
                     m = trackTime[0].getMonth(),
                     yearModel = years[y],
                     monthModel;
                 if (!yearModel) {
-                    years[y] = yearModel = {stats: new statsModel()}
+                    years[y] = yearModel = {stats: new statsModel()};
                 }
                 monthModel = yearModel[m];
                 if (!monthModel) {
-                    yearModel[m] = monthModel = {stats: new statsModel()}
+                    yearModel[m] = monthModel = {stats: new statsModel()};
                 }
 
                 monthModel.stats.addTrack(t);
@@ -85,7 +100,8 @@ module.exports = {
     Track: trackModel,
     TrackIndex: indexModel,
     TrackAggregation: timeAggregationModel
-}
+};
+
 },{"backbone":6}],3:[function(require,module,exports){
 var Backbone = require('backbone'),
     $ = require('jquery-untouched'),
@@ -100,15 +116,26 @@ module.exports = Backbone.Router.extend({
 
     routes: {
         '': 'index',
+        'all-tracks': 'allTracks',
         ':year-:month-:date-:name': 'track'
     },
 
     index: function() {
         new Models.TrackIndex().fetch({success: function(model) {
             var trackAgg = new Models.TrackAggregation({tracks: model});
-            $('#info').hide();
-            $('#index').show();
             new Views.Index({model: trackAgg}).render();
+        }});
+    },
+
+    allTracks: function() {
+        new Models.TrackIndex().fetch({success: function(model) {
+            var $index = $('#index'),
+                subview;
+            model.header = 'All Tracks';
+            subview = new Views.TrackList({model: model}).render();
+
+            $index.html('');
+            $index.append(subview.el);
         }});
     },
 
@@ -122,10 +149,12 @@ module.exports = Backbone.Router.extend({
             this.currentTrack.remove();
         }
 
+        $('#index .expanded').removeClass('expanded');
+        $('#index .selected').removeClass('selected');
         model.fetch({
             success: function() {
-                $('#index').hide();
-                $('#info').show();
+                $('#index li[data-track="' + model.id + '"]').addClass('selected');
+                $('#index li[data-track="' + model.id + '"] .details').addClass('expanded');
                 _this.currentTrack = new Views.Track({model: model, map: map})
                     .render();
             }
@@ -134,13 +163,12 @@ module.exports = Backbone.Router.extend({
 });
 
 },{"./models":2,"./views":5,"backbone":6,"jquery-untouched":16}],4:[function(require,module,exports){
-var index = require('../templates/index.hbs');
-
 module.exports = {
-    index: index
+    index: require('../templates/index.hbs'),
+    trackList: require('../templates/track-list.hbs')
 };
 
-},{"../templates/index.hbs":19}],5:[function(require,module,exports){
+},{"../templates/index.hbs":19,"../templates/track-list.hbs":20}],5:[function(require,module,exports){
 var Backbone = require('backbone'),
     $ = require('jquery-untouched'),
     _ = require('underscore'),
@@ -169,7 +197,7 @@ Handlebars.registerHelper('time', function(t) {
         return '-';
     }
 
-    var d = Math.floor((t[1].getTime() - t[0].getTime()) / 1000),
+    var d = t && t.length && t.length >= 2 ? Math.floor((t[1].getTime() - t[0].getTime()) / 1000) : t,
         h = Math.floor(d / 3600),
         m = Math.floor((d % 3600) / 60),
         s = d % 60,
@@ -189,64 +217,95 @@ Handlebars.registerHelper('pace', function(t) {
     return Math.floor(pace) + '\'' + (pad((pace - Math.floor(pace)) * 60)) + '\'\' / km';
 });
 
-module.exports = {
-    Index: Backbone.View.extend({
-        initialize: function(options) {
-            this.map = options.map;
-        },
+exports.TrackList = Backbone.View.extend({
+    template: templates.trackList,
 
-        render: function() {
-            var model = {
-                tracks: this.model.get('tracks').models.
-                    map(function(t, i) {
-                        return _.extend({
-                            date: t.attributes.time[0],
-                            url: '#' + (t.attributes.time.length > 0 ? moment(t.attributes.time[0]).format('YYYY-MM-DD') + '-' +
-                                                                                    t.attributes.name : '')
-                        }, t.attributes);
-                    }).
-                    sort(function(a, b) { return b.date - a.date; })
-                };
-            $('#index').html(templates.index(model));
-        }
-    }),
+    initialize: function() {
+    },
 
-    Track: Backbone.View.extend({
-        initialize: function(options) {
-            this.gpxUrl = 'data/tracks/' + this.model.id + '.gpx';
-            this.map = options.map;
-        },
+    render: function() {
+        var model = {
+            header: this.model.header,
+            tracks: this.model.
+                map(function(t) {
+                    var id = (t.attributes.time.length > 0 ? moment(t.attributes.time[0]).format('YYYY-MM-DD') + '-' +
+                                                                                t.attributes.name : '');
+                    return _.extend({
+                        id: id,
+                        date: t.attributes.time[0],
+                        url: '#' + id
+                    }, t.attributes);
+                }).
+                sort(function(a, b) { return b.date - a.date; })
+        };
+        this.$el.html(this.template(model));
 
-        render: function() {
-            var map = this.map;
+        return this;
+    }
+});
 
-            this.layer = new L.GPX(this.gpxUrl, {
-                async: true,
-                marker_options: {
-                    startIconUrl: 'lib/leaflet-gpx/pin-icon-start.png',
-                    endIconUrl: 'lib/leaflet-gpx/pin-icon-end.png',
-                    shadowUrl: 'lib/leaflet-gpx/pin-shadow.png'
-                }
-            }).on('loaded', function(e) {
-                var gpx = e.target;
-                map.fitBounds(gpx.getBounds());
-                _i('dist').textContent = (gpx.get_distance() / 1000).toFixed(2)
-                _i('time').textContent = gpx.get_duration_string(gpx.get_total_time(), true)
-                _i('pace').textContent = gpx.get_duration_string(gpx.get_total_time() / (gpx.get_distance() / 1000), true)
-            }).addTo(map);
+exports.Index = Backbone.View.extend({
+    initialize: function() {
+        var latestTracks = this.model.
+            get('tracks').models.
+            filter(function(t) { return t.hasTime(); }).
+            sort(function(a, b) { return b.get('time')[0].getTime() - a.get('time')[0].getTime(); }).
+            slice(0, 3);
+        this._trackList = new exports.TrackList({model: latestTracks});
+    },
 
-            return this;
-        },
+    render: function() {
+        var $el = $('#index'),
+            latestYear = Math.max.apply(this, this.model.getYears()),
+            latestYearModel = this.model.get('years')[latestYear],
+            latestMonth = Math.max.apply(this, this.model.getMonths(latestYear)),
+            latestMonthModel = latestYearModel[latestMonth],
+            model = {
+                latestYear: latestYear,
+                latestMonth: moment.months()[latestMonth],
+                latestYearStats: latestYearModel.stats.attributes,
+                latestMonthStats: latestMonthModel.stats.attributes
+            };
+        $el.html(templates.index(model));
+        this._trackList.render();
+        $el.find('.latest-tracks').append(this._trackList.el);
 
-        remove: function() {
-            if (this.layer) {
-                this.map.removeLayer(this.layer);
+        return this;
+    }
+});
+
+exports.Track = Backbone.View.extend({
+    initialize: function(options) {
+        this.gpxUrl = 'data/tracks/' + this.model.id + '.gpx';
+        this.map = options.map;
+    },
+
+    render: function() {
+        var map = this.map;
+
+        this.layer = new L.GPX(this.gpxUrl, {
+            async: true,
+            marker_options: {
+                startIconUrl: 'lib/leaflet-gpx/pin-icon-start.png',
+                endIconUrl: 'lib/leaflet-gpx/pin-icon-end.png',
+                shadowUrl: 'lib/leaflet-gpx/pin-shadow.png'
             }
+        }).on('loaded', function(e) {
+            var gpx = e.target;
+            map.fitBounds(gpx.getBounds());
+        }).addTo(map);
 
-            Backbone.View.prototype.remove.apply(this, arguments);
+        return this;
+    },
+
+    remove: function() {
+        if (this.layer) {
+            this.map.removeLayer(this.layer);
         }
-    })
-}
+
+        Backbone.View.prototype.remove.apply(this, arguments);
+    }
+});
 },{"./templates":4,"backbone":6,"hbsfy/runtime":15,"jquery-untouched":16,"moment":17,"underscore":18}],6:[function(require,module,exports){
 (function(){//     Backbone.js 1.1.2
 
@@ -17229,12 +17288,56 @@ var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, functionType="function";
+
+
+  buffer += "<h2>Stats</h2>\n<p>\n    <strong>"
+    + escapeExpression((helper = helpers.distance || (depth0 && depth0.distance),options={hash:{},data:data},helper ? helper.call(depth0, ((stack1 = (depth0 && depth0.latestMonthStats)),stack1 == null || stack1 === false ? stack1 : stack1.distance), 1, options) : helperMissing.call(depth0, "distance", ((stack1 = (depth0 && depth0.latestMonthStats)),stack1 == null || stack1 === false ? stack1 : stack1.distance), 1, options)))
+    + " km</strong> in\n    <strong>"
+    + escapeExpression((helper = helpers.time || (depth0 && depth0.time),options={hash:{},data:data},helper ? helper.call(depth0, ((stack1 = (depth0 && depth0.latestMonthStats)),stack1 == null || stack1 === false ? stack1 : stack1.time), options) : helperMissing.call(depth0, "time", ((stack1 = (depth0 && depth0.latestMonthStats)),stack1 == null || stack1 === false ? stack1 : stack1.time), options)))
+    + "</strong> during ";
+  if (helper = helpers.latestMonth) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.latestMonth); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\n</p>\n<p>\n    <strong>"
+    + escapeExpression((helper = helpers.distance || (depth0 && depth0.distance),options={hash:{},data:data},helper ? helper.call(depth0, ((stack1 = (depth0 && depth0.latestYearStats)),stack1 == null || stack1 === false ? stack1 : stack1.distance), options) : helperMissing.call(depth0, "distance", ((stack1 = (depth0 && depth0.latestYearStats)),stack1 == null || stack1 === false ? stack1 : stack1.distance), options)))
+    + " km</strong> in\n    <strong>"
+    + escapeExpression((helper = helpers.time || (depth0 && depth0.time),options={hash:{},data:data},helper ? helper.call(depth0, ((stack1 = (depth0 && depth0.latestYearStats)),stack1 == null || stack1 === false ? stack1 : stack1.time), options) : helperMissing.call(depth0, "time", ((stack1 = (depth0 && depth0.latestYearStats)),stack1 == null || stack1 === false ? stack1 : stack1.time), options)))
+    + "</strong> during ";
+  if (helper = helpers.latestYear) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.latestYear); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\n</p>\n<h2>Latest Tracks</h2>\n<div class=\"latest-tracks\">\n</div>\n<a href=\"#all-tracks\">All Tracks</a>\n";
+  return buffer;
+  });
+
+},{"hbsfy/runtime":15}],20:[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = require('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
 
 function program1(depth0,data) {
   
+  var buffer = "", stack1, helper;
+  buffer += "<h2>";
+  if (helper = helpers.header) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.header); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</h2>";
+  return buffer;
+  }
+
+function program3(depth0,data) {
+  
   var buffer = "", stack1, helper, options;
-  buffer += "\n    <li>\n        <a href=\""
+  buffer += "\n    <li data-track=\""
+    + escapeExpression(((stack1 = (depth0 && depth0.id)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\">\n        <a name=\""
+    + escapeExpression(((stack1 = (depth0 && depth0.id)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\"/>\n        <a href=\""
     + escapeExpression(((stack1 = (depth0 && depth0.url)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\">\n            <div class=\"summary\">"
     + escapeExpression((helper = helpers.distance || (depth0 && depth0.distance),options={hash:{},data:data},helper ? helper.call(depth0, (depth0 && depth0.distance), 2, options) : helperMissing.call(depth0, "distance", (depth0 && depth0.distance), 2, options)))
@@ -17246,16 +17349,16 @@ function program1(depth0,data) {
     + escapeExpression(((stack1 = (depth0 && depth0.date)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\">"
     + escapeExpression((helper = helpers.date || (depth0 && depth0.date),options={hash:{},data:data},helper ? helper.call(depth0, (depth0 && depth0.date), options) : helperMissing.call(depth0, "date", (depth0 && depth0.date), options)))
-    + "</time>\n            "
-    + escapeExpression(((stack1 = (depth0 && depth0.name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "<br/>\n            "
+    + "</time><br/>\n            "
     + escapeExpression(((stack1 = (depth0 && depth0.location)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\n            <div class=\"row\"></div>\n        </a>\n    </li>\n    ";
+    + "\n            <div class=\"row\"></div>\n        </a>\n        <div class=\"details\"></div>\n    </li>\n    ";
   return buffer;
   }
 
-  buffer += "<ul class=\"track-list\">\n    ";
-  stack1 = helpers.each.call(depth0, (depth0 && depth0.tracks), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.header), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n\n<ul class=\"track-list\">\n    ";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.tracks), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n</ul>";
   return buffer;
