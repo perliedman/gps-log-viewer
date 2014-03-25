@@ -1,5 +1,5 @@
 
-h2, p, a {
+.sidebar h2, .sidebar p, .sidebar a {
     padding-left: 12px;
 }
 
