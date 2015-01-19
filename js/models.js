@@ -50,7 +50,7 @@ var Backbone = require('backbone'),
         getMonths: function(year) {
             var months = this.get('years')[year];
             return Object.keys(months).
-                filter(function(k) { return parseInt(k, 10) > 0;});
+                filter(function(k) { return parseInt(k, 10) >= 0;});
         },
         _aggregate: function() {
             var yearModels = this.get('tracks').reduce(function(years, t) {
