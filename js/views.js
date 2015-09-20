@@ -3,7 +3,8 @@ var Backbone = require('backbone'),
     _ = require('underscore'),
     Handlebars = require('hbsfy/runtime'),
     moment = require('moment'),
-    templates = require('./templates');
+    templates = require('./templates'),
+    toGeoJSON = require('togeojson');
 
 Backbone.$ = $;
 
@@ -12,6 +13,22 @@ function _i(i) { return document.getElementById(i); }
 function pad(d) {
     return (d < 9 ? '0':'') + parseInt(d, 10);
 }
+
+var MultiStyleLine = L.LayerGroup.extend({
+    initialize: function(latLngs, options) {
+        L.setOptions(this, options);
+        var layers = this.options.styles.map(function(style) {
+            return L.polyline(latLngs, L.extend(options, style));
+        });
+        L.LayerGroup.prototype.initialize.call(this, layers, options);
+    },
+
+    addLatLng: function(ll) {
+        this.getLayers().forEach(function(l) {
+            l.addLatLng(ll);
+        });
+    }
+});
 
 Handlebars.registerHelper('date', function(s) {
     return moment(s).format('YYYY-MM-DD');
@@ -112,17 +129,60 @@ exports.Track = Backbone.View.extend({
     render: function() {
         var map = this.map;
 
-        this.layer = new L.GPX(this.gpxUrl, {
-            async: true,
-            marker_options: {
-                startIconUrl: 'lib/leaflet-gpx/pin-icon-start.png',
-                endIconUrl: 'lib/leaflet-gpx/pin-icon-end.png',
-                shadowUrl: 'lib/leaflet-gpx/pin-shadow.png'
-            }
-        }).on('loaded', function(e) {
-            var gpx = e.target;
-            map.fitBounds(gpx.getBounds());
-        }).addTo(map);
+        $.ajax(this.gpxUrl).done(L.bind(function(xml) {
+            var geojson = toGeoJSON.gpx(xml).features[0],
+                bounds = L.latLngBounds([]);
+
+            this.layer = geojson.geometry.coordinates.reduce(function(a, c, i) {
+                var t = new Date(geojson.properties.coordTimes[i]).getTime(),
+                    dt = i > 0 ? t - (new Date(geojson.properties.coordTimes[i - 1]).getTime()) : 0,
+                    ll = L.latLng(c[1], c[0]);
+                if (i > 0) {
+                    if (dt > 90 * 1000) {
+                        if (!a.lowRes) {
+                            a.layers.addLayer(new MultiStyleLine([a.lastLatLng], {
+                                styles: [
+                                    {color: '#888', dashArray: '5,7', opacity: 0.8, weight: 3}
+                                ]
+                            }));
+                            a.lowRes = true;
+                        }
+                    } else {
+                        if (a.lowRes || a.layers.getLayers().length === 0) {
+                            a.layers.addLayer(new MultiStyleLine([a.lastLatLng], {
+                                styles: [
+                                    {color: 'black', weight: 8, opacity: 0.5},
+                                    {color: 'white', weight: 7, opacity: 0.9},
+                                    {color: 'blue', weight: 2, opacity: 1}
+                                ]
+                            }));
+                            a.lowRes = false;
+                        }
+                    }
+                    var layers = a.layers.getLayers();
+                    layers[layers.length - 1].addLatLng(ll);
+                }
+                a.lastLatLng = ll;
+                bounds.extend(ll);
+                return a;
+            }, {layers: L.layerGroup([])}).layers;
+
+            this.layer.addTo(map);
+
+            map.fitBounds(bounds);
+        }, this));
+
+        // this.layer = new L.GPX(this.gpxUrl, {
+        //     async: true,
+        //     marker_options: {
+        //         startIconUrl: 'lib/leaflet-gpx/pin-icon-start.png',
+        //         endIconUrl: 'lib/leaflet-gpx/pin-icon-end.png',
+        //         shadowUrl: 'lib/leaflet-gpx/pin-shadow.png'
+        //     }
+        // }).on('loaded', function(e) {
+        //     var gpx = e.target;
+        //     map.fitBounds(gpx.getBounds());
+        // }).addTo(map);
 
         return this;
     },
