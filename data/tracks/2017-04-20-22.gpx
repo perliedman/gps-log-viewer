@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.topografix.com/GPX/1/0" version="1.0" xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd" creator="gpx.py -- https://github.com/tkrajina/gpxpy">
+<trk>
+<name>22</name>
+<desc/>
+<number>80.0</number>
+<trkseg>
+<trkpt lat="57.687723627" lon="11.948946118">
+<ele>-36.3927</ele>
+<time>2017-04-20T09:49:59Z</time></trkpt>
+<trkpt lat="57.687477116" lon="11.949611977">
+<ele>-36.3927</ele>
+<time>2017-04-20T09:50:17Z</time></trkpt>
+<trkpt lat="57.687324649" lon="11.950649908">
+<ele>-36.3927</ele>
+<time>2017-04-20T09:50:32Z</time></trkpt>
+<trkpt lat="57.682554508" lon="11.945609534">
+<ele>-36.3927</ele>
+<time>2017-04-20T09:54:13Z</time></trkpt>
+<trkpt lat="57.682124851" lon="11.945589166">
+<ele>-25.818359</ele>
+<time>2017-04-20T09:54:38Z</time></trkpt>
+<trkpt lat="57.686431305" lon="11.945200497">
+<ele>-23.89563</ele>
+<time>2017-04-20T09:56:57Z</time></trkpt>
+<trkpt lat="57.687655231" lon="11.946058972">
+<ele>-23.89563</ele>
+<time>2017-04-20T09:57:50Z</time></trkpt>
+<trkpt lat="57.688774047" lon="11.946071126">
+<ele>-23.89563</ele>
+<time>2017-04-20T09:58:13Z</time></trkpt>
+<trkpt lat="57.688905727" lon="11.946089314">
+<ele>-23.89563</ele>
+<time>2017-04-20T09:58:19Z</time></trkpt>
+<trkpt lat="57.688994659" lon="11.946424255">
+<ele>-23.89563</ele>
+<time>2017-04-20T09:58:27Z</time></trkpt>
+<trkpt lat="57.689332869" lon="11.947171083">
+<ele>-21.011597</ele>
+<time>2017-04-20T09:58:41Z</time></trkpt>
+<trkpt lat="57.691085106" lon="11.948692398">
+<ele>-14.763062</ele>
+<time>2017-04-20T09:59:35Z</time></trkpt>
+<trkpt lat="57.692850251" lon="11.949305953">
+<ele>-14.763062</ele>
+<time>2017-04-20T10:00:27Z</time></trkpt>
+<trkpt lat="57.692808006" lon="11.94970971">
+<ele>-14.763062</ele>
+<time>2017-04-20T10:00:35Z</time></trkpt>
+<trkpt lat="57.694573486" lon="11.9509333">
+<ele>11.673218</ele>
+<time>2017-04-20T10:02:01Z</time></trkpt>
+<trkpt lat="57.699916698" lon="11.94811698">
+<ele>11.192505</ele>
+<time>2017-04-20T10:04:33Z</time></trkpt>
+<trkpt lat="57.699683011" lon="11.947335871">
+<ele>3.501953</ele>
+<time>2017-04-20T10:04:45Z</time></trkpt></trkseg></trk></gpx>
