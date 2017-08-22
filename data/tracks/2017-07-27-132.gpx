@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.topografix.com/GPX/1/0" version="1.0" xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd" creator="gpx.py -- https://github.com/tkrajina/gpxpy">
+<trk>
+<name>132</name>
+<desc/>
+<number>116.0</number>
+<trkseg>
+<trkpt lat="57.733548833" lon="11.929050833">
+<ele>22.728271</ele>
+<time>2017-07-27T15:25:23Z</time></trkpt>
+<trkpt lat="57.733725021" lon="11.928979419">
+<ele>23.689575</ele>
+<time>2017-07-27T15:25:30Z</time></trkpt>
+<trkpt lat="57.734035905" lon="11.928777415">
+<ele>22.728271</ele>
+<time>2017-07-27T15:25:37Z</time></trkpt>
+<trkpt lat="57.734977277" lon="11.928167799">
+<ele>21.286377</ele>
+<time>2017-07-27T15:26:02Z</time></trkpt>
+<trkpt lat="57.736530779" lon="11.927294154">
+<ele>25.612305</ele>
+<time>2017-07-27T15:26:44Z</time></trkpt>
+<trkpt lat="57.737796027" lon="11.926611867">
+<ele>28.496216</ele>
+<time>2017-07-27T15:27:19Z</time></trkpt>
+<trkpt lat="57.737457315" lon="11.92589228">
+<ele>27.534912</ele>
+<time>2017-07-27T15:27:35Z</time></trkpt>
+<trkpt lat="57.737209713" lon="11.925793123">
+<ele>27.534912</ele>
+<time>2017-07-27T15:27:42Z</time></trkpt>
+<trkpt lat="57.736700596" lon="11.926052542">
+<ele>26.092896</ele>
+<time>2017-07-27T15:27:56Z</time></trkpt>
+<trkpt lat="57.736301953" lon="11.926380694">
+<ele>25.612305</ele>
+<time>2017-07-27T15:28:07Z</time></trkpt>
+<trkpt lat="57.735699462" lon="11.926573729">
+<ele>28.496216</ele>
+<time>2017-07-27T15:28:23Z</time></trkpt>
+<trkpt lat="57.734687012" lon="11.92689023">
+<ele>30.418823</ele>
+<time>2017-07-27T15:28:52Z</time></trkpt>
+<trkpt lat="57.734374115" lon="11.926743714">
+<ele>28.976929</ele>
+<time>2017-07-27T15:29:01Z</time></trkpt>
+<trkpt lat="57.733968263" lon="11.927939476">
+<ele>30.418823</ele>
+<time>2017-07-27T15:29:16Z</time></trkpt>
+<trkpt lat="57.733748406" lon="11.928363433">
+<ele>29.45752</ele>
+<time>2017-07-27T15:29:25Z</time></trkpt>
+<trkpt lat="57.733592419" lon="11.928618997">
+<ele>30.899536</ele>
+<time>2017-07-27T15:29:31Z</time></trkpt>
+<trkpt lat="57.733567357" lon="11.928756628">
+<ele>31.860718</ele>
+<time>2017-07-27T15:29:33Z</time></trkpt>
+<trkpt lat="57.733606668" lon="11.929091485">
+<ele>32.341553</ele>
+<time>2017-07-27T15:29:37Z</time></trkpt></trkseg></trk></gpx>
